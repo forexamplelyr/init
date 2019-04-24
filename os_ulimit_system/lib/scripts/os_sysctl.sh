@@ -58,20 +58,6 @@ if [ $? -ne 0 ];then
 fi
 # 表示系统进行交换行为的程度，数值（0-100）越高，越可能发生磁盘交换
 
-item='vm.dirty_ratio = 10'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-# 仅用10%做为系统cache
-
-item='fs.file-max = 1048575'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-# 增加系统文件描述符限制 2^20-1
-
 item='net.core.somaxconn = 1024'
 cat $fp | grep "$item"
 if [ $? -ne 0 ];then
@@ -127,52 +113,6 @@ if [ $? -ne 0 ];then
         echo "$item" >> $fp
 fi
 # 开启并记录欺骗，源路由和重定向包
-
-item='net.ipv4.conf.all.accept_source_route = 0'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-item='net.ipv4.conf.default.accept_source_route = 0'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-# 处理无源路由的包
-
-item='net.ipv4.conf.all.rp_filter = 1'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-item='net.ipv4.conf.default.rp_filter = 1'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-# 开启反向路径过滤
-
-item='net.ipv4.conf.all.accept_redirects = 0'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-item='net.ipv4.conf.default.accept_redirects = 0'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-item='net.ipv4.conf.all.secure_redirects = 0'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-item='net.ipv4.conf.default.secure_redirects = 0'
-cat $fp | grep "$item"
-if [ $? -ne 0 ];then
-        echo "$item" >> $fp
-fi
-# 确保无人能修改路由表
 
 item='net.ipv4.ip_default_ttl = 64'
 cat $fp | grep "$item"
