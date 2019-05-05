@@ -57,4 +57,3 @@ if __name__ == '__main__':
     cf = "/etc/profile"
     config(cf)
     rotate_log();
-    
