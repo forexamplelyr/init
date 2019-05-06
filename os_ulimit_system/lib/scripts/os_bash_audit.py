@@ -44,9 +44,11 @@ def config(cf):
         
     if  False == check_exist(cf):
         with open(cf, "a+") as fd:
-            #confstr = '\nexport PROMPT_COMMAND=\'{ cmdstr=$(history 1 | { read x y; echo $y; }); echo -n [$(date -d"today" "%s")]; echo -n [$(who am i) -- $(whoami)]; echo " $cmdstr"; } >> %s/egg.log\'\n'  % ('+%Y-%m-%d %H:%M:%S', audit_log_path,)
-            confstr = '\nexport PROMPT_COMMAND=\'{ cmdstr=$(history 1 | { read x y; echo $y; }); echo -n "[$(date -d"today" "%s")]"; echo -n " [$(whoami)] "; echo "[$cmdstr]"; } >> %s%s\'\n'  % ('+%Y-%m-%d %H:%M:%S', audit_log_path, log_name)
+            #confstr = '\nexport PROMPT_COMMAND=\'{ cmdstr=$(history 1 | { read x y; echo $y; }); echo -n "[$(date -d"today" "%s")]"; echo -n " [$(whoami)] "; echo "[$cmdstr]"; } >> %s%s\'\n'  % ('+%Y-%m-%d %H:%M:%S', audit_log_path, log_name)
+            #confstr = '\nexport PROMPT_COMMAND=\'{ thisHistID ='history 1|awk "{print() \\$1}"';lastCommand='history 1| awk "{\\$1=\"\" ;print()}"'; user='id -un'; whoStr=('who -u am i');realUser=${whoStr[0]};logMonth=${whoStr[2]};logDay=${whoStr[3]}; logTime=${whoStr[4]}; pid=${whoStr[6]};ip=${whoStr[7]}; if [ ${thisHistID}x != ${lastHistID}x ];then echo -E 'date "%s"' ; echo $user\($realUser\)@$ip[PID:$pid][LOGIN:$logMonth $logDay $logTime] --- $lastCommand ;lastHistID=$thisHistID ; fi ;} >> %s%s\'\n' % ('+%Y-%m-%d %H:%M:%S',audit_log_path, log_name) 
+            confstr = '\nexport PROMPT_COMMAND=\'{ cmdstr=$(history 1 | { read x y; echo $y; }); echo -n "[$(date -d"today" "%s") ]"; echo -n "@" ; echo -n "[ $(whoami) ]" ; echo -n "LOGIN_INITFO:[$(who -u am i)]"; echo " --- [$cmdstr]"; } >> %s%s\'\n'  % ('+%Y-%m-%d %H:%M:%S', audit_log_path, log_name)
             fd.write(confstr)
+            
         ## 使生效
         commands.getstatusoutput("source %s" % (cf))
         print "OK"
